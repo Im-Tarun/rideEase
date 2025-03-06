@@ -2,14 +2,14 @@ import { validationResult } from "express-validator";
 import userModel from "../models/user.model.js";
 
 export const userRegister = async (req, res) => {
-    const {fullName, emailId, password} = req.body
-    const validError = validationResult(req);
+    const {fullName, email, password} = req.body
+    const errors = validationResult(req);
     
-    if(!emailId || !password || !fullName.firstName){
+    if(!email || !password || !fullName.firstName){
       return res.status(400).json({mesaage: "please enter all the details "})  
     }
-    if (!validError.isEmpty()) {
-      res.status(400).json({ success: false, mesaage: validError.array() });
+    if (!errors.isEmpty()) {
+      res.status(400).json({ success: false, mesaage: errors.array() });
     }
    try {
         const hashedPassword = await userModel.hashPassword(password);
@@ -18,7 +18,7 @@ export const userRegister = async (req, res) => {
                 firstName : fullName.firstName,
                 lastName : fullName.lastName,
             },
-            emailId,
+            email,
             password: hashedPassword,
         })
         await newUser.save()
@@ -30,3 +30,28 @@ export const userRegister = async (req, res) => {
    }
  
 };
+
+export const userLogin = async (req, res) => {
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()){
+    return res.status(400).json({ success: false, mesaage: errors.array() });
+  }
+  const {password, email} = req.body;
+
+  const user = await userModel.findOne({email}).select('+password') // select + password because did select false in model in password
+
+  if(!user){
+    return res.status(401).json({ success: false, mesaage: "Email is not registered. Register first" });
+  }
+
+  const isMatch = await user.comparePassword(password);
+
+  if(!isMatch){
+    return res.status(401).json({ success: false, mesaage: "password does not match" });
+  }
+  const token = user.generateAuthToken();
+
+  return res.status(200).json({ success: true, mesaage: user, token });
+}
+
