@@ -39,19 +39,23 @@ export const userLogin = async (req, res) => {
   }
   const {password, email} = req.body;
 
-  const user = await userModel.findOne({email}).select('+password') // select + password because did select false in model in password
+  try {
+    const user = await userModel.findOne({email}).select('+password') // select + password because did select false in model in password
+    if(!user){
+      return res.status(401).json({ success: false, mesaage: "Email is not registered. Register first" });
+    }
+    const isMatch = await user.comparePassword(password);
 
-  if(!user){
-    return res.status(401).json({ success: false, mesaage: "Email is not registered. Register first" });
+    if(!isMatch){
+      return res.status(401).json({ success: false, mesaage: "password does not match" });
+    }
+    const token = user.generateAuthToken();
+    
+    return res.status(200).json({ success: true, mesaage: user, token });
+  } catch (error) {
+      console.log(error)
+      return res.status(500).json({mesaage: "sever error"}) 
   }
 
-  const isMatch = await user.comparePassword(password);
-
-  if(!isMatch){
-    return res.status(401).json({ success: false, mesaage: "password does not match" });
-  }
-  const token = user.generateAuthToken();
-
-  return res.status(200).json({ success: true, mesaage: user, token });
 }
 
