@@ -29,41 +29,32 @@ Example:
 - **400 Bad Request**: Missing fields or validation errors (invalid email, insufficient character lengths).
 - **500 Internal Server Error**: A server-side error occurred.
 
-## POST /api/user/login
+## GET /api/user/profile
 
 ### Description
-This endpoint logs an existing user in by verifying the provided credentials. On success, it returns the user data and a JWT token.
+Retrieves the authenticated user's profile data.
 
-### Request Body
-- **email** (string, required): Must be a valid email.
-- **password** (string, required): Must be at least 6 characters long.
+### Response Status Codes
+- **200 OK**: Returns the user's profile data.
+- **401 Unauthorized**: User is not authenticated.
 
-Example:
+### Example Response
 ```json
 {
-  "email": "john.doe@example.com",
-  "password": "secret123"
+  "fullName": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "emailId": "john.doe@example.com",
+  "createdAt": "2023-01-01T00:00:00.000Z"
 }
 ```
 
-### Response Status Codes
-- **200 OK**: Login successful. Returns user data and a JWT token.
-- **400 Bad Request**: Validation errors with email or password.
-- **401 Unauthorized**: Email not registered or password does not match.
-- **500 Internal Server Error**: A server-side error occurred.
+## POST /api/user/logout
 
-### Response Example
-```json
-{
-  "success": true,
-  "mesaage": {
-    "fullName": {
-      "firstName": "John",
-      "lastName": "Doe"
-    },
-    "email": "john.doe@example.com"
-    // ...other user fields...
-  },
-  "token": "jwt_token_here"
-}
-``` 
+### Description
+Logs out the user by clearing the authentication token cookie and blacklisting the token.
+
+### Response Status Codes
+- **200 OK**: Logout is successful.
+- **500 Internal Server Error**: A server error occurred.

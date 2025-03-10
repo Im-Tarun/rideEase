@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import userModel from "../models/user.model.js";
+import blTokenModel from "../models/blackListToken.model.js";
 
 export const userRegister = async (req, res) => {
     const {fullName, email, password} = req.body
@@ -23,7 +24,7 @@ export const userRegister = async (req, res) => {
         })
         await newUser.save()
       const token = newUser.generateAuthToken();
-      return res.status(200).json({mesaage: newUser,token})  
+      return res.status(200).json({mesaage: newUser, token})  
     } catch (error) {
         console.log(error)
         return res.status(500).json({mesaage: "sever error"})  
@@ -50,6 +51,7 @@ export const userLogin = async (req, res) => {
       return res.status(401).json({ success: false, mesaage: "password does not match" });
     }
     const token = user.generateAuthToken();
+    res.cookie("token", token);
     
     return res.status(200).json({ success: true, mesaage: user, token });
   } catch (error) {
@@ -58,4 +60,18 @@ export const userLogin = async (req, res) => {
   }
 
 }
+
+export const userData = async (req, res) => {
+  res.status(200).json(req.user)
+}
+
+export const logOut = async (req, res) => {
+  res.clearCookie('token');
+  const token = req.cookies.token || req.authorization?.split(" ")[1]
+  const blToken = new blTokenModel({token})
+  await blToken.save();
+
+  res.status(200).json({mesaage : "logged out successfully"})
+}
+
 
