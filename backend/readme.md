@@ -29,6 +29,29 @@ Example:
 - **400 Bad Request**: Missing fields or validation errors (invalid email, insufficient character lengths).
 - **500 Internal Server Error**: A server-side error occurred.
 
+## POST /api/user/login
+
+### Description
+Authenticates a user using their email and password. On success, returns the user data and a JWT token.
+
+### Request Body
+- **email** (string, required): Must be a valid email.
+- **password** (string, required): User password.
+
+Example:
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "secret123"
+}
+```
+
+### Response Status Codes
+- **200 OK**: Login successful. Returns the user data and a JWT token.
+- **400 Bad Request**: Missing fields or validation errors.
+- **401 Unauthorized**: Invalid email or password.
+- **500 Internal Server Error**: A server error occurred.
+
 ## GET /api/user/profile
 
 ### Description
