@@ -3,6 +3,7 @@ import  dotenv from 'dotenv'
 import cors from 'cors'
 import dbcon from './config/dbcon.js'
 import useRouter from './routes/user.route.js'
+import captainRouter from './routes/captain.route.js'
 import cookieParser from 'cookie-parser'
 
 dotenv.config()
@@ -13,6 +14,7 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(cors())
 app.use("/api/user",  useRouter)
+app.use("/api/captain", captainRouter)
 app.use(urlencoded({extended:true}))
 
 app.get('/', (req, res) => {

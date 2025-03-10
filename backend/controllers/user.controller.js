@@ -10,8 +10,14 @@ export const userRegister = async (req, res) => {
       return res.status(400).json({mesaage: "please enter all the details "})  
     }
     if (!errors.isEmpty()) {
-      res.status(400).json({ success: false, mesaage: errors.array() });
+      return res.status(400).json({ success: false, mesaage: errors.array() });
     }
+
+    const isUserAlreadyExist = await userModel.findOne({email})
+    if(isUserAlreadyExist){
+      return res.status(400).json({message: "Email already registered"})  
+    }
+
    try {
         const hashedPassword = await userModel.hashPassword(password);
         const newUser = new userModel({
@@ -23,8 +29,10 @@ export const userRegister = async (req, res) => {
             password: hashedPassword,
         })
         await newUser.save()
-      const token = newUser.generateAuthToken();
-      return res.status(200).json({mesaage: newUser, token})  
+          
+        const token = newUser.generateAuthToken();
+        return res.status(200).json({mesaage: newUser, token})  
+
     } catch (error) {
         console.log(error)
         return res.status(500).json({mesaage: "sever error"})  
