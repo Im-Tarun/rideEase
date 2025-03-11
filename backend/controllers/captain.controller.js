@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import captainModel from "../models/captain.model.js";
+import blTokenModel from "../models/blackListToken.model.js";
 
 export const captainRegister = async (req, res) => {
     const {fullName, email, password, status, vehicle} = req.body
@@ -45,4 +46,46 @@ export const captainRegister = async (req, res) => {
         return res.status(500).json({mesaage: "sever error"}) 
     }
 
+}
+
+export const captainLogin = async (req, res) => {
+    const {password, email} = req.body;
+    const errors = validationResult(req);
+  
+    if(!errors.isEmpty()){
+      return res.status(400).json({ success: false, mesaage: errors.array() });
+    }
+  
+    try {
+      const captain = await captainModel.findOne({email}).select('+password')
+      if(!captain){
+        return res.status(401).json({ success: false, mesaage: "Email is not registered. Register first" });
+      }
+      const isMatch = await captain.comparePassword(password);
+  
+      if(!isMatch){
+        return res.status(401).json({ success: false, mesaage: "password does not match" });
+      }
+      const token = captain.generateAuthToken();
+      res.cookie("token", token);
+      
+      return res.status(200).json({ success: true, mesaage: captain, token });
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({mesaage: "sever error"}) 
+    }
+  
+}
+
+export const captainProfile = async (req, res) => {
+  return res.status(200).json(req.captain)
+}
+
+export const logOut = async (req, res) => {
+  res.clearCookie('token');
+  const token = req.cookies.token || req.authorization?.split(" ")[1]
+  const blToken = new blTokenModel({token})
+  await blToken.save();
+
+  res.status(200).json({mesaage : "logged out successfully"})
 }

@@ -69,7 +69,7 @@ export const userLogin = async (req, res) => {
 
 }
 
-export const userData = async (req, res) => {
+export const userProfile = async (req, res) => {
   res.status(200).json(req.user)
 }
 
