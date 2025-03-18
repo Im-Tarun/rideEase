@@ -74,12 +74,22 @@ export const userProfile = async (req, res) => {
 }
 
 export const logOut = async (req, res) => {
+try {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
   res.clearCookie('token');
-  const token = req.cookies.token || req.authorization?.split(" ")[1]
+  if (!token) {
+    return res.status(400).json({ message: "Token is required for logout" });
+  }
   const blToken = new blTokenModel({token})
   await blToken.save();
+  
+} catch (error) {
+  console.error("Logout Error:", error);
+  res.status(500).json({ message: "Server error during logout" });
+}
 
-  res.status(200).json({mesaage : "logged out successfully"})
+console.log("done")
+  return res.status(200).json({mesaage : "logged out successfully"})
 }
 
 
