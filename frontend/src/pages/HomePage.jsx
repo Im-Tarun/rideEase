@@ -4,10 +4,10 @@ import { FaCircleDot } from "react-icons/fa6";
 import {useGSAP} from '@gsap/react'
 import gsap from 'gsap';
 import { RiArrowDownSLine } from "react-icons/ri";
-import LocationSearchPannel from '../components/LocationSearchPannel.jsx';
-import SelectVehicle from '../components/SelectVehicle.jsx';
-import FindingDriver from '../components/FindingDriver.jsx';
-import WaitingForDriver from '../components/waitingForDriver.jsx';
+import LocationSearchPannel from '../components/userComponents/LocationSearchPannel.jsx';
+import SelectVehicle from '../components/userComponents/SelectVehicle.jsx';
+import FindingDriver from '../components/userComponents/FindingDriver.jsx';
+import WaitingForDriver from '../components/userComponents/WaitingForDriver.jsx';
 
 
 const HomePage = () => {
@@ -16,7 +16,7 @@ const HomePage = () => {
   const [showLocPannel, setShowLocPannel] = useState(false)
   const [showVehiclePnl, setShowVehiclePnl] = useState(false)
   const [showFindDriverPnl, setShowFDrPnl ] = useState(false)
-  const [showWaitDvPnl, setshowWaitDvPnl] = useState(false)
+  const [showWaitDvPnl, setshowWaitDvPnl] = useState(true)
 
   const locPannelRef = useRef(null)
   const downArrowRef = useRef(null)

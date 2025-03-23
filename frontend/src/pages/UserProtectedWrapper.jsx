@@ -39,7 +39,7 @@ const UserProtectedWrapper = ({ children }) => {
 
   if (isLoading) {
     // Show a loading indicator or nothing while checking the token
-    return <div>Loading...</div>;
+    return <div className='text-center text-6xl my-auto w-screen text-white h-screen flex items-center justify-center'>Loading...</div>
   }
 
   return (
