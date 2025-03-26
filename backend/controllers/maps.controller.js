@@ -12,7 +12,7 @@ export const getCoordinates = async(req, res) => {
         return res.status(200).json(coordinates);
     } catch (error) {
         console.log(error)
-        return res.status(404).json({mesaage: "Enternal server error"})
+        return res.status(404).json({ message: "Internal server error" })
     }
 
 }
@@ -28,28 +28,27 @@ export const getDistanceTime = async(req, res) => {
         return res.status(200).json(distanceTime);
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: "Enternal server Error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 
 }
 
 export const getSuggestions = async (req, res) => {
     
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ success: false, mesaage: errors.array() });
+    }
+    const {input} = req.query;
+    
+    const suggestions = await suggestionFunc(input)
     try {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ success: false, mesaage: errors.array() });
-        }
-        const {input} = req.query;
-        
-        const suggestions = await suggestionFunc(input)
 
         return res.status(200).json(suggestions)
 
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: "Enternal server Error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
- 

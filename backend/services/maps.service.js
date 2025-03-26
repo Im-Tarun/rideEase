@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = process.env.GO_MAPS_API_KEY; // Ensure this is set in your environment variables
+const apiKey = process.env.GO_MAPS_API_KEY;   
 
 export const coordinatesFunc = async (address) => {
   const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${encodeURIComponent(
@@ -74,6 +74,6 @@ export const suggestionFunc = async (input) => {
     throw new Error("Unable to get suggestions");
   } catch (error) {
     console.error(error);
-    throw error;
+    throw new Error("Internal server Error");
   }
 };

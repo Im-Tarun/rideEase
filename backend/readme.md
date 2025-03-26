@@ -202,3 +202,37 @@ Example:
   "_id": "64f1c2e5b5d6c2a1f8e4d456"
 }
 ```
+
+## GET /api/ride/get-fare
+
+### Description
+This endpoint calculates the fare for a ride based on the pick-up and destination locations.
+
+### Query Parameters
+- **pickUp** (string, required): The pick-up location. Minimum length is 3 characters.
+- **destination** (string, required): The destination location. Minimum length is 3 characters.
+
+Example:
+```
+/api/ride/get-fare?pickUp=New York&destination=Los Angeles
+```
+
+### Response Status Codes
+- **200 OK**: Fare calculated successfully.
+- **400 Bad Request**: Validation errors with pick-up or destination.
+- **500 Internal Server Error**: Unable to calculate fare.
+
+### Response Example
+```json
+{
+  "cost": {
+    "motorcycle": "1800.00",
+    "auto": "3150.00",
+    "car": "4050.00"
+  },
+  "otherInfo": {
+    "distanceInKm": 4490.0,
+    "timeInMin": 2460.0
+  }
+}
+```

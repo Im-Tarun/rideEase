@@ -1,18 +1,34 @@
 import { validationResult } from "express-validator";
-import { createRideService } from "../services/ride.service.js";
+import { createRideService, getFare } from "../services/ride.service.js";
 
 export const createRide = async (req, res) => {
   const errors = validationResult(req)
   if(!errors.isEmpty()){
-    return res.status(400).json({ success: false, mesaage: errors.array() });
+    return res.status(400).json({ success: false, message: errors.array() });
   }
-  const {pickUp , destination , vehicleType} = req.body;
-  
   try {
+    const {pickUp , destination , vehicleType} = req.body;
+
     const ride = await createRideService({user:req.user._id, pickUp, destination, vehicleType})
     return res.status(200).json(ride)
   } catch (error) {
     console.log(error)
     return res.status(500).json({message: "server error"})
+  }
+}
+
+export const getFarePrice = async(req, res) => {
+  const errors = validationResult(req)
+  if(!errors.isEmpty()){
+    return res.status(400).json({ success: false, message: errors.array() });
+  }
+  const {pickUp , destination } = req.query;
+  const fare = await getFare(pickUp, destination) 
+  try {
+    
+    return res.status(200).json(fare)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({message: "Server error"}) 
   }
 }
