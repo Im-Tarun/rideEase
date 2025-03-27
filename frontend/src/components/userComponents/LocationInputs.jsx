@@ -3,15 +3,13 @@ import { FaCircleDot, FaSquare } from 'react-icons/fa6'
 import { RiArrowDownSLine } from 'react-icons/ri'
 
 const LocationInputs = forwardRef((params, ref) => {
-    const handleSubmit = () => {
-
-    }
+  
 
     return (
         <div >
             <div ref={ref} onClick={() => params.setShowLocPannel(false)} className='absolute  top-1 right-1 text-4xl '>< RiArrowDownSLine /></div>
             <h1 className='text-3xl font-semibold my-3 '>Find a trip</h1>
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg flex gap-2 flex-col w-full ">
+            <form   className="bg-white rounded-lg flex gap-2 flex-col w-full ">
                 <div className='relative'>
                     <div className='bg-black h-10.5 border-l-3 z-10 absolute top-[40px] left-[19px]'></div>
                     <div className='absolute top-5 left-3  '><FaCircleDot /></div>

@@ -174,13 +174,32 @@ This endpoint creates a new ride request.
 - **pickUp** (string, required): The pick-up location. Minimum length is 3 characters.
 - **destination** (string, required): The destination location. Minimum length is 3 characters.
 - **vehicleType** (string, required): The type of vehicle. Must be one of `car`, `motorcycle`, or `auto`.
+- **fare** (object, required): The fare details for the ride.
+  - **cost** (object, required): The cost breakdown for different vehicle types.
+    - **motorcycle** (number, required): Fare for a motorcycle.
+    - **auto** (number, required): Fare for an auto.
+    - **car** (number, required): Fare for a car.
+  - **otherInfo** (object, required): Additional fare information.
+    - **distanceInKm** (number, required): Distance in kilometers.
+    - **timeInMin** (number, required): Time in minutes.
 
 Example:
 ```json
 {
   "pickUp": "New York",
   "destination": "Los Angeles",
-  "vehicleType": "car"
+  "vehicleType": "car",
+  "fare": {
+    "cost": {
+      "motorcycle": 1800.00,
+      "auto": 3150.00,
+      "car": 4050.00
+    },
+    "otherInfo": {
+      "distanceInKm": 4490.0,
+      "timeInMin": 2460.0
+    }
+  }
 }
 ```
 

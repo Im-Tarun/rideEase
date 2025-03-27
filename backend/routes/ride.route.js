@@ -9,6 +9,16 @@ router.post('/create',
     body('pickUp').isString().isLength({min: 3}).withMessage("Invalid pick-up location"),
     body('destination').isString().isLength({min: 3}).withMessage("Invalid destination Location"),
     body('vehicleType').isIn(['car','motorcycle','auto']).withMessage("Invalid vehicle Type"),
+
+    body('fare').isObject().withMessage("Fare must be an object"),
+    body('fare.cost').isObject().withMessage("Fare cost must be an object"),
+    body('fare.cost.motorcycle').isNumeric().withMessage("Motorcycle fare must be a numeric value"),
+    body('fare.cost.auto').isNumeric().withMessage("Auto fare must be a numeric value"),
+    body('fare.cost.car').isNumeric().withMessage("Car fare must be a numeric value"),
+    body('fare.otherInfo').isObject().withMessage("Fare otherInfo must be an object"),
+    body('fare.otherInfo.distanceInKm').isNumeric().withMessage("Distance in km must be a numeric value"),
+    body('fare.otherInfo.timeInMin').isNumeric().withMessage("Time in minutes must be a numeric value"),
+    
     userAuth, 
     createRide,
 )

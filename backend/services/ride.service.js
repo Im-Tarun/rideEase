@@ -54,17 +54,17 @@ const generateOtp = (num) => {
     return otp; // Return an array of strings, each representing a digit
 };
 
-
 export const createRideService = async ({
   user,
   pickUp,
   destination,
   vehicleType,
+  fare,
 }) => {
-  if (!user || !pickUp || !destination || !vehicleType) {
+  if (!user || !pickUp || !destination || !vehicleType || !fare) {
     throw new Error("All fields are requiered");
   }
-  const fare = await getFare(pickUp, destination);
+  // const fare = await getFare(pickUp, destination); //we already got fare in frontend by an api so better not calc again
 
   const newRide = new rideModel({
     user,

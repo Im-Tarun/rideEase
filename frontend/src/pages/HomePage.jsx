@@ -31,9 +31,8 @@ const HomePage = () => {
   const [activeSugg, setActiveSugg] = useState('')
   
 
-  const [fare , setFare ] = useState(null)
-
-
+  
+  
   // main location pannel
   useGSAP(() => {
     if (showLocPannel) {
@@ -56,7 +55,7 @@ const HomePage = () => {
       })
     }
   }, [showLocPannel])
-
+  
   // select vehicle pannel
   useGSAP(() => {
     if (showVehiclePnl) {
@@ -69,7 +68,7 @@ const HomePage = () => {
       })
     }
   }, [showVehiclePnl])
-
+  
   // finding driver pannel 
   useGSAP(() => {
     if (showFindDriverPnl) {
@@ -82,7 +81,7 @@ const HomePage = () => {
       })
     }
   }, [showFindDriverPnl])
-
+  
   // waiting for driver details pannel
   useGSAP(() => {
     if (showWaitDvPnl) {
@@ -95,9 +94,10 @@ const HomePage = () => {
       })
     }
   }, [showWaitDvPnl])
-
-   
-
+  
+  const [fare , setFare ] = useState(null)
+  const [vehicle, setVehicle] = useState('')
+  
   const handlePickUpChange = async (e) => {
     setPickUp(e.target.value)
     try {
@@ -131,12 +131,13 @@ const HomePage = () => {
     }
   }
   const handleFindRide = async() => {
+    
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/ride/get-fare`,
         {
           params: { 
             pickUp,
-             destination
+            destination
             },
             headers: {
               authorization: "Bearer " + localStorage.getItem('token')
@@ -146,21 +147,22 @@ const HomePage = () => {
         setFare(response.data)
         setShowVehiclePnl(true)
         setShowLocPannel(false)
-      // console.log(response.data.cost.car)
-    } catch (error) {
-      console.log(error)
+        // console.log(response.data.cost.car)
+      } catch (error) {
+        console.log(error)
+      }
     }
-  }
-  const [vehicle, setVehicle] = useState('')
   const handleCreateRide = async (vehicleType) => {
     setVehicle( vehicleType)
+    console.log(vehicleType)
     setShowFDrPnl(true)
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/create/off`,
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/create`,
         { // Request body
           pickUp,
           destination,
           vehicleType,
+          fare,
         },
         { // Configuration object
           headers: {

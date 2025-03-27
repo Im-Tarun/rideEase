@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IoIosLogOut } from "react-icons/io";
 import NewRidePannel from '../components/captainComponents/NewRidePannel';
@@ -7,9 +7,10 @@ import { useGSAP } from '@gsap/react';
 import CaptainDetails from '../components/captainComponents/CaptainDetails';
 import ConfirmRidePnl from '../components/captainComponents/ConfirmRidePnl';
 import PickUpPannel from '../components/captainComponents/PickUpPannel';
+import {CaptainDataContext} from '../contexts/CaptainContext'
 
 const CaptainHome = () => {
-  const [showNewRidePnl, setShowNewRidePnl] = useState(false)
+  const [showNewRidePnl, setShowNewRidePnl] = useState(true)
   const [showCnfRidePnl , setShowCnfRidePnl ] = useState(false)
   const [showPickUpPnl , setShowPickUpPnl ] = useState(false)
 
@@ -56,6 +57,9 @@ const CaptainHome = () => {
     }
   }, [showCnfRidePnl])
 
+  const [captainData] = useContext(CaptainDataContext); 
+
+
   return (
 
     <div className='flex relative  flex-col bg-cover bg-center bg-[url(https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif)] h-screen justify-between '>
@@ -67,8 +71,8 @@ const CaptainHome = () => {
 
       <div className=' w-full h-screen absolute top-0 flex flex-col justify-end overflow-hidden'>
         {/* captain details */}
-        <div className='bg-[#F1F2F6] px-3 flex flex-col '>
-          <CaptainDetails />
+        <div className='bg-[#F1F2F6] px-3 flex flex-col'>
+          <CaptainDetails captainData={captainData} />
         </div>
 
         {/* show new ride  */}
