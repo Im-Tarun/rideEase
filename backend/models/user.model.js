@@ -29,8 +29,6 @@ const userSchema = new mongoose.Schema({
     socketId:{
         type: String, 
     },
-}, { 
-    timestamps: true
 })
 
 userSchema.methods.generateAuthToken = function() {
@@ -46,6 +44,6 @@ userSchema.statics.hashPassword = async function(password) {
   return await bcrypt.hash(password, 10)
 }
 
-const userModel = mongoose.model("users", userSchema )
+const userModel = mongoose.model("user", userSchema )
 
 export default userModel;

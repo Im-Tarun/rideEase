@@ -9,11 +9,12 @@ const NewRidePannel = (params) => {
         <div className='bg-[#F1F2F6] flex flex-col'>
             <h2 className='text-3xl font-semibold bg-[#FF8900]  px-4 py-6'> New Ride Available!</h2>
 
+            {/*user image and info */}
             <div className='flex justify-between my-3 p-4 items-center' >
                 <div className='flex gap-2 items-center'>
                     <img className=' rounded-full h-18 w-18 object-cover object-center ' src="https://photosbook.in/wp-content/uploads/real-girl-pic54.jpg " alt="sdfs" />
                     <div>
-                        <h2 className='text-2xl font-semibold'> Jiya pandey</h2>
+                        <h2 className='text-2xl font-semibold capitalize'>{params.newRide?.user.fullName.firstName+""+params.newRide?.user.fullName.lastName}</h2>
                         <p className='text-gray-600 text-lg'>Immidiate</p>
                     </div>
                 </div>
@@ -22,34 +23,34 @@ const NewRidePannel = (params) => {
                     <p className='text-gray-600 text-lg'>away</p>
                 </div>
             </div>
-            {/* drivers location */}
+            {/*user pickup*/}
             <div className=' flex  '>
-                <span className='my-auto text-2xl px-4'><MdLocationOn /></span>
+                <span className='my-auto text-2xl px-4'><MdLocationOn/></span>
                 <div className='border-t-2 p-4 border-gray-400 grow'>
-                    <h1 className='text-2xl font-semibold'>512/11-A </h1>
-                    <p className='text-lg   text-gray-600'>Kempegowda International Airport</p>
+                    <h1 className='text-2xl font-semibold capitalize' >{params.newRide?.pickUp}</h1>
+                    <p className='text-lg  text-gray-600'>Pick-up</p>
                 </div>
             </div>
-            {/* location box  */}
+            {/*user destination*/}
             <div className=' flex  '>
                 <span className='my-auto px-4'><FaSquare /></span>
                 <div className='border-t-2 p-4 border-gray-400 grow'>
-                    <h1 className='text-2xl font-semibold'>Third coffee wave </h1>
-                    <p className='text-lg   text-gray-600'>Kempegowda International Airport pata nahi kaha kaha bhejte hai</p>
+                    <h1 className='text-2xl font-semibold capitalize'>{params.newRide?.destination}</h1>
+                    <p className='text-lg   text-gray-600'>Destination</p>
                 </div>
             </div>
             {/* price box  */}
             <div className=' flex  '>
                 <span className='my-auto px-4'><FaMoneyCheck /></span>
                 <div className='border-t-2 p-4 border-gray-400 grow'>
-                    <h1 className='text-2xl font-semibold'>₹232.33 </h1>
+                    <h1 className='text-2xl font-semibold capitalize'>₹{params.newRide?.fare}</h1>
                     <p className='text-lg   text-gray-600'>Mode - cash</p>
                 </div>
             </div>
             <div className='items-center justify-start gap-4 px-4 flex mb-6 mt-2 flex-row-reverse '>
                 <button onClick={() => {
-                    params.setShowPickUpPnl(true)
-                    params.setShowNewRidePnl(false)
+                    
+                    params.acceptRide()
                 }} className='py-2 px-4 rounded-lg grow text-2xl bg-[#ffcf10] font-bold  '>
                     Accept
                 </button>

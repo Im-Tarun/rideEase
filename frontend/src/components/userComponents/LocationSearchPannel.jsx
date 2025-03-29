@@ -16,7 +16,7 @@ const LocationSearchPannel = (params) => {
     <>
       <div className="bg-white  px-3 pt-2 w-full rounded-lg h-full ">
         <div className='items-center justify-start gap-4  flex mb-6 flex-row-reverse '>
-          <button onClick={()=>params.handleFindRide() } className='py-2 px-4 rounded-lg grow text-xl bg-[#ffcf10] font-bold'  > Find Ride </button>
+          <button onClick={()=>params.handleFindFare() } className='py-2 px-4 rounded-lg grow text-xl bg-[#ffcf10] font-bold'  > Find Ride </button>
         </div>
         <ul className="space-y-3 h-[86%] pb-4 overflow-y-scroll ">
           { params.suggestions.map((elem, indx) => {

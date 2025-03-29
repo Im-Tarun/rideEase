@@ -1,14 +1,13 @@
 import axios from "axios";
+import captainModel from "../models/captain.model.js"; 
 
 const apiKey = process.env.GO_MAPS_API_KEY;   
 
 export const coordinatesFunc = async (address) => {
-  const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${encodeURIComponent(
-    address
-  )}&key=${apiKey}`;
+  const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${address}&key=${apiKey}`;
 
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url); 
     const data = response.data;
     // Check if the API returned a valid response
     if (data.status === "OK") {
@@ -24,10 +23,7 @@ export const coordinatesFunc = async (address) => {
     );
   } catch (error) {
     console.error("Error fetching coordinates:", error.message);
-    throw new Error(
-      error.response?.data?.error_message ||
-        "Unable to fetch coordinates for the given address."
-    );
+    return []
   }
 };
 
@@ -71,9 +67,30 @@ export const suggestionFunc = async (input) => {
     if (data.status === "OK") {
       return data.predictions;
     }
-    throw new Error("Unable to get suggestions");
+    // Handle cases where no suggestions are found
+    console.warn("No suggestions found for input:", input);
+    return [];
   } catch (error) {
-    console.error(error);
-    throw new Error("Internal server Error");
+    console.log(error);
+    return [];
   }
 };
+
+export const getCaptainsInRadius = async (ltd, lng, radius) => { 
+  try {
+    const radiusInRadians = radius / 6317;
+    // Updated query using captainModel's GeoJSON location field
+    const captains = await captainModel.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [[ltd, lng], radiusInRadians],
+        }, 
+      },
+    });
+    return captains;
+  } catch (error) {
+    console.error("Error finding captains in radius:", error.message);
+    throw new Error("Unable to find captains in the specified radius.");
+  }
+};
+

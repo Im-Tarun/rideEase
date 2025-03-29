@@ -1,9 +1,8 @@
 import React, { useState,useRef } from 'react'
 
 const OtpInput = () => {
-const otpLength = 4
+  const otpLength = 4
   const inputRef = useRef([])
-
   const [otp, setOtp] = useState(new Array(otpLength).fill(''))
 
   const handleChange = (e, indx) => {
@@ -12,7 +11,6 @@ const otpLength = 4
     if (indx < otp.length - 1 && value) {
       inputRef.current[indx + 1].focus()
     }
-
     const newOtp = [...otp];
     newOtp[indx] = value
     setOtp(newOtp)
@@ -24,7 +22,6 @@ const otpLength = 4
     }
   }
 
-    
   return (
     <div className='flex items-center justify-center gap-5 '>
       {otp.map((_e, indx) => {

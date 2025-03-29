@@ -1,15 +1,14 @@
-import React, { useRef, useState } from 'react'
-import { FaSquare } from "react-icons/fa";
-import { FaCircleDot } from "react-icons/fa6";
+import React, { useContext, useEffect, useRef, useState } from 'react' 
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap';
-import { RiArrowDownSLine } from "react-icons/ri";
+import gsap from 'gsap'; 
 import LocationSearchPannel from '../components/userComponents/LocationSearchPannel.jsx';
 import SelectVehicle from '../components/userComponents/SelectVehicle.jsx';
 import FindingDriver from '../components/userComponents/FindingDriver.jsx';
 import WaitingForDriver from '../components/userComponents/WaitingForDriver.jsx';
 import LocationInputs from '../components/userComponents/LocationInputs.jsx';
 import axios from 'axios';
+import { UserDataContext } from '../contexts/UserContext.jsx';
+import { SocketContext } from '../contexts/SocketContext.jsx'; 
 
 
 const HomePage = () => {
@@ -29,10 +28,10 @@ const HomePage = () => {
   const [pickUpSugg, setPickUpSugg] = useState([])
   const [destionationSugg, setDestinationSugg] = useState([])
   const [activeSugg, setActiveSugg] = useState('')
+  const [pickUpCaptain , setPickUpCaptain ] = useState(null)
   
-
   
-  
+//pannel opening
   // main location pannel
   useGSAP(() => {
     if (showLocPannel) {
@@ -95,13 +94,15 @@ const HomePage = () => {
     }
   }, [showWaitDvPnl])
   
+  
+  // api connection for fare, pickup and destination , creating ride
   const [fare , setFare ] = useState(null)
-  const [vehicle, setVehicle] = useState('')
+  const [vehicle, setVehicle] = useState('') 
   
   const handlePickUpChange = async (e) => {
     setPickUp(e.target.value)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/maps/get-suggestions/off`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/maps/get-suggestions`,
         {
           params: { input: e.target.value },
           headers: {
@@ -117,7 +118,7 @@ const HomePage = () => {
   const handleDestinationChange = async (e) => {
     setDestination(e.target.value) 
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/maps/get-suggestions/off`,
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/maps/get-suggestions`,
         {
           params: { input: e.target.value },
           headers: {
@@ -130,8 +131,7 @@ const HomePage = () => {
       console.log(error)
     }
   }
-  const handleFindRide = async() => {
-    
+  const handleFindFare = async() => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/ride/get-fare`,
         {
@@ -151,10 +151,9 @@ const HomePage = () => {
       } catch (error) {
         console.log(error)
       }
-    }
+  }
   const handleCreateRide = async (vehicleType) => {
-    setVehicle( vehicleType)
-    console.log(vehicleType)
+    setVehicle(vehicleType) 
     setShowFDrPnl(true)
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/create`,
@@ -176,6 +175,21 @@ const HomePage = () => {
     }
   }
   
+//contecting to socket 
+const [userData] = useContext(UserDataContext)
+const {socket } = useContext(SocketContext)
+
+useEffect(() => {
+  socket.emit("join",{userType: 'user', userId : userData._id})
+
+  socket.on("ride-confirmed", (data)=>{
+    setPickUpCaptain(data)
+    setShowFDrPnl(false)
+    setshowWaitDvPnl(true)
+  })
+  
+}, [socket])
+
 
 
   return (
@@ -192,7 +206,7 @@ const HomePage = () => {
 
           {/* location suggestion component */}
           <div ref={locPannelRef} className='h-0' >
-            <LocationSearchPannel handleFindRide={handleFindRide} setPickUp={setPickUp} setDestination={setDestination} setShowVehiclePnl={setShowVehiclePnl} activeSugg={activeSugg} suggestions={activeSugg == 'pickup' ? pickUpSugg : destionationSugg} setShowLocPannel={setShowLocPannel} />
+            <LocationSearchPannel handleFindFare={handleFindFare} setPickUp={setPickUp} setDestination={setDestination} setShowVehiclePnl={setShowVehiclePnl} activeSugg={activeSugg} suggestions={activeSugg == 'pickup' ? pickUpSugg : destionationSugg} setShowLocPannel={setShowLocPannel} />
           </div>
         </div>
 
@@ -208,7 +222,7 @@ const HomePage = () => {
 
           {/*waiting for driver to pick u up*/}
           <div ref={waitDriverPnlref} className='w-full h-screen flex flex-col translate-y-full justify-end z-40 absolute '>
-            <WaitingForDriver />
+            <WaitingForDriver pickUp={pickUp} vehicle={vehicle}  destination={destination} fare={fare} pickUpCaptain={pickUpCaptain}/>
           </div>
 
 

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const rideSchema = new mongoose.Schema({
+const rideSchema = new mongoose.Schema({ 
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
@@ -8,7 +8,7 @@ const rideSchema = new mongoose.Schema({
   },
   captain: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "captain",
   },
   pickUp: {
     type: String,

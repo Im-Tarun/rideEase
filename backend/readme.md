@@ -168,20 +168,20 @@ Example:
 ## POST /api/ride/create
 
 ### Description
-This endpoint creates a new ride request.
+This endpoint creates a new ride request. It accepts fare details (previously calculated via /api/ride/get-fare). Note: In the response, the "duration" field represents the ride distance (in km) and the "distance" field represents the estimated travel time (in minutes).
 
 ### Request Body
 - **pickUp** (string, required): The pick-up location. Minimum length is 3 characters.
 - **destination** (string, required): The destination location. Minimum length is 3 characters.
 - **vehicleType** (string, required): The type of vehicle. Must be one of `car`, `motorcycle`, or `auto`.
-- **fare** (object, required): The fare details for the ride.
-  - **cost** (object, required): The cost breakdown for different vehicle types.
-    - **motorcycle** (number, required): Fare for a motorcycle.
-    - **auto** (number, required): Fare for an auto.
-    - **car** (number, required): Fare for a car.
-  - **otherInfo** (object, required): Additional fare information.
-    - **distanceInKm** (number, required): Distance in kilometers.
-    - **timeInMin** (number, required): Time in minutes.
+- **fare** (object, required): The fare details including:
+  - **cost** (object):
+    - **motorcycle** (number, required)
+    - **auto** (number, required)
+    - **car** (number, required)
+  - **otherInfo** (object):
+    - **distanceInKm** (number, required)
+    - **timeInMin** (number, required)
 
 Example:
 ```json
@@ -214,13 +214,33 @@ Example:
   "user": "64f1c2e5b5d6c2a1f8e4d123",
   "pickUp": "New York",
   "destination": "Los Angeles",
-  "duration": "41.000",
-  "distance": "4490.000",
-  "fare": "450.000",
+  "duration": "4490.000",
+  "distance": "2460.000",
+  "fare": "4050.00",
   "otp": "174456",
   "_id": "64f1c2e5b5d6c2a1f8e4d456"
 }
 ```
+
+## POST /api/ride/confirm
+
+### Description
+This endpoint confirms a ride by assigning a captain to the ride and notifying the user via a socket event.
+
+### Request Body
+- **rideId** (string, required): A valid MongoDB ObjectId of the ride to be confirmed.
+
+Example:
+```json
+{
+  "rideId": "64f1c2e5b5d6c2a1f8e4d456"
+}
+```
+
+### Response Status Codes
+- **200 OK**: Ride confirmed successfully. Returns a message and the updated ride details.
+- **400 Bad Request**: Validation errors such as an invalid rideId.
+- **500 Internal Server Error**: A server-side error occurred.
 
 ## GET /api/ride/get-fare
 

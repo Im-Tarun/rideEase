@@ -15,11 +15,10 @@ const FindingDriver = (params) => {
             {/* vehicle boxes */}
             <div className='flex flex-col '>
                 {/* vehicle image box */}
-                <div className='flex justify-center border-t-2 pt-2 border-gray-400'>
-                    {console.log({motorcycle, auto , car}[params.vehicle])}
+                <div className='flex justify-center border-t-2 pt-2 border-gray-400'> 
                     <img className='w-52' src={{motorcycle, auto , car}[params.vehicle]} alt="caar" />
                 </div>
-                {/* drivers location */}
+                {/* pickup location*/}
                 <div className=' flex  '>
                     <span className='my-auto text-2xl px-4'><MdLocationOn /></span>
                     <div className='border-t-2 p-4 border-gray-400 grow'>
@@ -27,7 +26,7 @@ const FindingDriver = (params) => {
                         <p className='text-lg   text-gray-600'>Pick-up</p>
                     </div>
                 </div>
-                {/* location box  */}
+                {/* destination  */}
                 <div className=' flex  '>
                     <span className='my-auto px-5'><FaSquare /></span>
                     <div className='border-t-2 p-4 border-gray-400 grow'>

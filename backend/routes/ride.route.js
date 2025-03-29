@@ -1,9 +1,9 @@
 import express from "express"
 import {body, query} from "express-validator" 
-import { userAuth } from "../middlewares/auth.middleware.js"
-import { createRide, getFarePrice } from "../controllers/ride.controller.js"
+import { captainAuth, userAuth } from "../middlewares/auth.middleware.js"
+import { confirmRide, createRide, getFarePrice } from "../controllers/ride.controller.js"
 
-const router = express.Router()
+const router = express.Router() 
 
 router.post('/create',
     body('pickUp').isString().isLength({min: 3}).withMessage("Invalid pick-up location"),
@@ -27,6 +27,12 @@ router.get('/get-fare',
     query('destination').isString().isLength({min: 3}).withMessage("Invalid destination Location"),
     userAuth, 
     getFarePrice,
+)
+
+router.post('/confirm',
+    body('rideId').isMongoId().withMessage("Invalid ride ID"),
+    captainAuth,
+    confirmRide
 )
 
 export default router

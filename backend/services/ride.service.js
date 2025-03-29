@@ -7,7 +7,7 @@ export const getFare = async (pickUp, destination) => {
   if (!pickUp || !destination) {
     throw new Error("Pickup and destination are required");
   }
-  const distanceTime = await distanceTimeFunc(pickUp, destination);
+  const distanceTime = await distanceTimeFunc(pickUp, destination); 
   const { distance, duration } = distanceTime;
 
   // Define rates per kilometer, per minute, and base fare for different vehicle types
@@ -17,7 +17,7 @@ export const getFare = async (pickUp, destination) => {
     car: { baseFare: 20, perKm: 9, perMin: 1.5 },
   };
 
-  // Convert distance from meters to kilometers and time from seconds to minutes
+  // Convert distance from meters to kilometers and time from seconds to minutes 
   const distanceInKm = distance.value / 1000;
   const timeInMin = duration.value / 60;
 
@@ -73,10 +73,25 @@ export const createRideService = async ({
     duration: fare.otherInfo.distanceInKm.toFixed(3),
     distance : fare.otherInfo.timeInMin.toFixed(3),
     fare: fare.cost[vehicleType],
-    otp: generateOtp(6)
-
+    otp: generateOtp(6),
+    status: "pending"
   });
-  await newRide.save();
+  await newRide.save(); 
   return newRide;
 };
 
+export const addCapInRide = async(rideId, capId) => {
+  if (!rideId || !capId) {
+    throw new Error("Ride ID and Captain ID are required");
+  } 
+  const ride = await rideModel.findByIdAndUpdate(rideId, {
+    captain : capId,
+    status: "accepted"
+  }, { new: true }).populate("captain").populate("user")
+  
+  if (!ride) {
+    throw new Error("Ride not found");
+  }
+  
+  return ride;
+}

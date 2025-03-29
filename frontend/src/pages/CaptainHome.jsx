@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IoIosLogOut } from "react-icons/io";
 import NewRidePannel from '../components/captainComponents/NewRidePannel';
@@ -8,11 +8,15 @@ import CaptainDetails from '../components/captainComponents/CaptainDetails';
 import ConfirmRidePnl from '../components/captainComponents/ConfirmRidePnl';
 import PickUpPannel from '../components/captainComponents/PickUpPannel';
 import {CaptainDataContext} from '../contexts/CaptainContext'
+import { SocketContext } from '../contexts/SocketContext';
+import axios from 'axios'; 
 
 const CaptainHome = () => {
-  const [showNewRidePnl, setShowNewRidePnl] = useState(true)
+  const [showNewRidePnl, setShowNewRidePnl] = useState(false)
   const [showCnfRidePnl , setShowCnfRidePnl ] = useState(false)
   const [showPickUpPnl , setShowPickUpPnl ] = useState(false)
+  const [newRide , setNewRide ] = useState(null)
+  const [isRiding , setIsRiding ] = useState(false)
 
   const newRidePnlRef = useRef(null)
   const confirmRidePnlRef = useRef(null)
@@ -57,9 +61,60 @@ const CaptainHome = () => {
     }
   }, [showCnfRidePnl])
 
+  // socket logic 
   const [captainData] = useContext(CaptainDataContext); 
+  const {socket} = useContext(SocketContext)
 
+  
+  useEffect(() => {
+    socket.emit("join",{userType: 'captain', userId : captainData._id})
 
+    const updateLocation = () => {
+      if (!navigator.geolocation) {
+        console.log("Geolocation is not supported by this browser.");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // socket.emit("updateCapLoc", { capId: captainData._id, latitude, longitude }); //because google not able to find my correct location
+          socket.emit("updateCapLoc", { capId: captainData._id, latitude: 26.8336077, longitude: 81.03627879999999});
+          console.log("Location Updated:", latitude, longitude);
+        },
+        (error) => {
+          console.error("Error fetching location:", error);
+        }
+      );
+    };
+    updateLocation()
+    
+    if(!isRiding){
+      socket.on("new-ride", (data) => {
+        setNewRide(data);
+        setShowNewRidePnl(true);
+      });
+    }
+
+    // const intervalId = setInterval(updateLocation, 1000)  // Set up the interval
+    // return () => clearInterval(intervalId); //cleanup
+  }, [socket])
+  
+  const acceptRide = async() => {
+    setIsRiding(true);
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/confirm`, {
+      rideId: newRide._id
+    }, { // Configuration object
+      headers: {
+        authorization: "Bearer " + localStorage.getItem('token'),
+      },
+    }
+  )
+    console.log(response.data)
+    setShowPickUpPnl(true)
+    setShowNewRidePnl(false)
+  }
+  
+ 
   return (
 
     <div className='flex relative  flex-col bg-cover bg-center bg-[url(https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif)] h-screen justify-between '>
@@ -77,17 +132,17 @@ const CaptainHome = () => {
 
         {/* show new ride  */}
         <div ref={newRidePnlRef} className='w-full flex flex-col justify-end z-40 translate-y-full absolute '>
-          <NewRidePannel setShowNewRidePnl={setShowNewRidePnl} setShowPickUpPnl={setShowPickUpPnl} />
+          <NewRidePannel acceptRide={acceptRide} newRide={newRide} setShowNewRidePnl={setShowNewRidePnl} setShowPickUpPnl={setShowPickUpPnl} />
         </div>
 
         {/* pikup ride */}
         <div ref={pickUpPnlRef} className='w-full flex flex-col justify-end z-40 translate-y-full absolute '>
-          <PickUpPannel setShowPickUpPnl={setShowPickUpPnl} setShowCnfRidePnl={setShowCnfRidePnl} />
+          <PickUpPannel setShowPickUpPnl={setShowPickUpPnl} newRide={newRide} setShowCnfRidePnl={setShowCnfRidePnl} />
         </div>
 
         {/* confirm  ride  */}
         <div ref={confirmRidePnlRef} className='w-full h-screen flex flex-col justify-end z-40 translate-y-full absolute '>
-          <ConfirmRidePnl setShowCnfRidePnl={setShowCnfRidePnl}/>
+          <ConfirmRidePnl  newRide={newRide}  setShowCnfRidePnl={setShowCnfRidePnl}/>
         </div>
 
 
