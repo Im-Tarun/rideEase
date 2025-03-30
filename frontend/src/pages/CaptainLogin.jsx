@@ -35,8 +35,8 @@ const CaptainLogin = () => {
   return (
     <div className="flex justify-center flex-col items-center h-screen w-full px-5">
       <form onSubmit={handleLogin} className="bg-white p-6 rounded-lg flex flex-col gap-5 shadow-xl w-full max-w-lg">
-        <img width={120} className='h-fit mt-5 ' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="UBER" />
-        <h2 className="text-4xl font-bold mb-3">Captain</h2>
+      <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
+        <h2 className="text-3xl font-bold mb-3">Captain</h2>
 
         <div>
           <label htmlFor='email' className="block text-xl font-semibold">What's Your Email</label>

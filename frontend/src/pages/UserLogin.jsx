@@ -37,7 +37,7 @@ const UserLogin = () => {
   return (
     <div className="flex justify-center flex-col items-center h-screen w-full px-5">
       <form onSubmit={handleLogin} className="bg-white p-6 rounded-lg flex flex-col gap-5 shadow-xl w-full max-w-lg">
-        <img width={120} className='h-fit my-5 ' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="UBER" />
+      <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
 
         <div>
           <label htmlFor='email' className="block text-xl font-semibold">What's Your Email</label>
@@ -75,7 +75,7 @@ const UserLogin = () => {
             Login
           </button>
 
-          <div className='bg-white'>xt-
+          <div className='bg-white'> 
             <span>New here ? </span>
             <Link
               to="/user-register"

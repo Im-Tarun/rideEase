@@ -35,12 +35,12 @@ const UserRegister = () => {
 
   return (
     <>
-      <div className='flex  flex-col items-center h-screen pt-2 w-full px-2 ' >
-        <form onSubmit={handleSubmit(registerHandler)} className="bg-white py-5 px-4 rounded-lg flex flex-col gap-4 shadow-xl w-full max-w-lg">
-          <img width={70} className='h-fit my-5 ' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="UBER" />
+      <div className='flex  flex-col items-center h-screen pt-2 w-full px-2 overflow-y-hidden ' >
+        <form onSubmit={handleSubmit(registerHandler)} className="bg-white py-5 mt-3  px-4 rounded-lg flex flex-col gap-4 shadow-xl w-full max-w-lg">
+          <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
 
           {/* name  */}
-          <div className=' grid grid-cols-2 gap-x-3 relative'>
+          <div className=' grid grid-cols-2 gap-x-3 relative '>
             <label htmlFor="name" className="block text-xl mb-1 col-span-2 font-semibold">What's your Name</label>
             <input
               type="text"

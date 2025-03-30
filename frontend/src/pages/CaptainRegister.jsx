@@ -35,9 +35,8 @@ const CaptainRegister = () => {
     <>
       <div className='flex flex-col items-center  w-full p-2 '>
         <form onSubmit={handleSubmit(registerHandler)} className="bg-white 2 py-5 px-4 rounded-lg flex flex-col gap-2 shadow-xl w-full max-w-lg">
-        <img width={70} className='h-fit mt-5 ' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="UBER" />
-
-          <h2 className="text-4xl font-bold mb-3">Captain</h2>
+        <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
+          <h2 className="text-3xl font-bold mb-3">Captain</h2>
 
           {/* full name */}
           <div className='grid grid-cols-2 gap-x-3 relative'>
