@@ -1,5 +1,6 @@
 import React from 'react' 
 import { FaLocationArrow } from "react-icons/fa6"; 
+import { MdOutlineMyLocation } from 'react-icons/md';
 
 const LocationSearchPannel = (params) => {
 
@@ -14,12 +15,16 @@ const LocationSearchPannel = (params) => {
 
   return (
     <>
-      <div className="bg-white  px-3 pt-2 w-full rounded-lg h-full ">
-        <div className='items-center justify-start gap-4  flex mb-6 flex-row-reverse '>
+      <div className="bg-white  px-3 pt-2 w-full rounded-lg h-full overflow-x-hidden pb-2 ">
+        <div className=' justify-evenly flex mb-4 flex-col '>
           <button onClick={()=>params.handleFindFare() } className='py-2 px-4 rounded-lg grow text-xl bg-[#ffcf10] font-bold'  > Find Ride </button>
+          {params.activeSugg === 'pickup' && <button onClick={()=>{}} className='flex items-center self-start my-1 py-1 text-purple-800 font-semibold active:text-blue-800'>
+            <span  className='px-2'><MdOutlineMyLocation/></span>
+            <span>Use current location</span>
+          </button>}
         </div>
-        <ul className="space-y-3 h-[86%] pb-4 overflow-y-scroll ">
-          { params.suggestions.map((elem, indx) => {
+        <ul className="space-y-3 h-[83%]  overflow-y-scroll ">
+          {  params.suggestions.map((elem, indx) => {
             return (
               <li key={indx} onClick={() => {
                 handleSetInput(elem)

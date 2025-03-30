@@ -2,8 +2,7 @@ import React from 'react'
 import { FaSquare } from "react-icons/fa";
 import { FaMoneyCheck } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
-import OtpInput from './OtpInput';
-import { Link } from 'react-router-dom';
+import OtpInput from './OtpInput'; 
 
 const ConfirmRidePnl = (params) => {
     return (
@@ -50,16 +49,18 @@ const ConfirmRidePnl = (params) => {
                     </div>
                 </div>
 
-                {/* otp box */}
+                {/* OTP box */}
                 <div className='my-2 border-t-2 border-gray-500 px-4'>
                     <h1 className='text-3xl py-4 font-semibold text-center'>Enter OTP</h1>
-                    <OtpInput />
+                    <OtpInput setOtp={params.setOtp} otp={params.otp} />
                 </div>
-                {/* buttons  */}
+                {/* Buttons */}
                 <div className='items-center justify-start gap-4 px-4 flex my-6 flex-row-reverse '>
-                    <Link to={'/captain-riding'} className='py-2 text-center rounded-lg grow text-2xl bg-[#12b312] font-bold text-[#F1F2F6] '>
+                    <button onClick={()=>{
+                        params.startRide()
+                    }} className='py-2 text-center rounded-lg grow text-2xl bg-[#12b312] font-bold text-[#F1F2F6] '>
                         Start
-                    </Link>
+                    </button>
                     <button onClick={() => params.setShowCnfRidePnl(false)} className='py-2 px-4  rounded-lg text-2xl  bg-[#242A37] font-bold text-white  '>
                         Cancel
                     </button>

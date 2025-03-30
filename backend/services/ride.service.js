@@ -95,3 +95,18 @@ export const addCapInRide = async(rideId, capId) => {
   
   return ride;
 }
+
+export const getRideOtp = async(otp, rideId)=>{
+  if (!otp || !rideId) {
+    throw new Error("Ride ID and Otp are required");
+  } 
+  const ride = await rideModel.findByIdAndUpdate(rideId, { 
+    status: "ongoing"
+  }, { new: true }).populate("captain").populate("user").select("+otp") 
+
+  if (!ride) {
+    throw new Error("Ride not found");
+  }
+
+  return ride;
+}

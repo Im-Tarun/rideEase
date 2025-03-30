@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { IoIosLogOut } from "react-icons/io";
 import NewRidePannel from '../components/captainComponents/NewRidePannel';
 import gsap from 'gsap';
@@ -9,7 +9,8 @@ import ConfirmRidePnl from '../components/captainComponents/ConfirmRidePnl';
 import PickUpPannel from '../components/captainComponents/PickUpPannel';
 import {CaptainDataContext} from '../contexts/CaptainContext'
 import { SocketContext } from '../contexts/SocketContext';
-import axios from 'axios'; 
+import axios from 'axios';  
+import CurrentLocationMap from '../components/CurrentLocationMap';
 
 const CaptainHome = () => {
   const [showNewRidePnl, setShowNewRidePnl] = useState(false)
@@ -17,6 +18,8 @@ const CaptainHome = () => {
   const [showPickUpPnl , setShowPickUpPnl ] = useState(false)
   const [newRide , setNewRide ] = useState(null)
   const [isRiding , setIsRiding ] = useState(false)
+  const [otp, setOtp] = useState(new Array(6).fill(''))
+
 
   const newRidePnlRef = useRef(null)
   const confirmRidePnlRef = useRef(null)
@@ -64,7 +67,7 @@ const CaptainHome = () => {
   // socket logic 
   const [captainData] = useContext(CaptainDataContext); 
   const {socket} = useContext(SocketContext)
-
+  const navigate = useNavigate()
   
   useEffect(() => {
     socket.emit("join",{userType: 'captain', userId : captainData._id})
@@ -100,21 +103,45 @@ const CaptainHome = () => {
   }, [socket])
   
   const acceptRide = async() => {
-    setIsRiding(true);
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/confirm`, {
-      rideId: newRide._id
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/accept`, {
+        rideId: newRide._id
     }, { // Configuration object
       headers: {
         authorization: "Bearer " + localStorage.getItem('token'),
       },
-    }
-  )
-    console.log(response.data)
+    })
+    setIsRiding(true);
+    setNewRide(response.data.newRide)
     setShowPickUpPnl(true)
     setShowNewRidePnl(false)
+      
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
+  const startRide = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/start`, 
+      {
+        otp: otp.join(''),
+        rideId : newRide._id
+      },
+      {headers: {
+        authorization: "Bearer " + localStorage.getItem('token'),
+      },}
+        ) 
+    setIsRiding(true);
+    navigate('/captain-ridding', { state: { rideData: newRide} });
+    console.log(response.data)
+    } catch (error) {
+      console.log(error)
+    }
   }
   
- 
+  
   return (
 
     <div className='flex relative  flex-col bg-cover bg-center bg-[url(https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif)] h-screen justify-between '>
@@ -125,6 +152,11 @@ const CaptainHome = () => {
       </div>
 
       <div className=' w-full h-screen absolute top-0 flex flex-col justify-end overflow-hidden'>
+        {/* map compnent */}
+        <div className='z-0 h-[75%]' >
+            <CurrentLocationMap />
+          </div>
+
         {/* captain details */}
         <div className='bg-[#F1F2F6] px-3 flex flex-col'>
           <CaptainDetails captainData={captainData} />
@@ -142,7 +174,7 @@ const CaptainHome = () => {
 
         {/* confirm  ride  */}
         <div ref={confirmRidePnlRef} className='w-full h-screen flex flex-col justify-end z-40 translate-y-full absolute '>
-          <ConfirmRidePnl  newRide={newRide}  setShowCnfRidePnl={setShowCnfRidePnl}/>
+          <ConfirmRidePnl setOtp={setOtp} otp={otp} startRide={startRide}  newRide={newRide}  setShowCnfRidePnl={setShowCnfRidePnl}/>
         </div>
 
 

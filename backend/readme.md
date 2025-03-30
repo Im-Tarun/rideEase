@@ -275,3 +275,61 @@ Example:
   }
 }
 ```
+
+## POST /api/ride/start
+
+### Description
+This endpoint starts a ride after verifying the provided OTP.
+
+### Request Body
+- **rideId** (string, required): A valid MongoDB ObjectId of the ride to be started.
+- **otp** (string, required): A 6-digit OTP for ride verification.
+
+Example:
+```json
+{
+  "rideId": "64f1c2e5b5d6c2a1f8e4d456",
+  "otp": "174456"
+}
+```
+
+### Response Status Codes
+- **200 OK**: Ride started successfully.
+- **400 Bad Request**: Validation errors such as an invalid OTP or rideId.
+- **500 Internal Server Error**: A server-side error occurred.
+
+### Response Example
+```json
+{
+  "message": "Ride has started successfully"
+}
+```
+
+---
+
+## POST /api/ride/end
+
+### Description
+This endpoint ends a ride and updates its status to "completed."
+
+### Request Body
+- **rideId** (string, required): A valid MongoDB ObjectId of the ride to be ended.
+
+Example:
+```json
+{
+  "rideId": "64f1c2e5b5d6c2a1f8e4d456"
+}
+```
+
+### Response Status Codes
+- **200 OK**: Ride ended successfully.
+- **400 Bad Request**: Validation errors such as an invalid rideId.
+- **500 Internal Server Error**: A server-side error occurred.
+
+### Response Example
+```json
+{
+  "message": "Ride has completed successfully"
+}
+```

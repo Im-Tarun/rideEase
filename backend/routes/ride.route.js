@@ -1,7 +1,7 @@
 import express from "express"
 import {body, query} from "express-validator" 
 import { captainAuth, userAuth } from "../middlewares/auth.middleware.js"
-import { confirmRide, createRide, getFarePrice } from "../controllers/ride.controller.js"
+import { acceptRide,  createRide, endRide, getFarePrice, startRide } from "../controllers/ride.controller.js"
 
 const router = express.Router() 
 
@@ -28,11 +28,22 @@ router.get('/get-fare',
     userAuth, 
     getFarePrice,
 )
-
-router.post('/confirm',
+router.post('/accept',
     body('rideId').isMongoId().withMessage("Invalid ride ID"),
     captainAuth,
-    confirmRide
+    acceptRide
 )
+router.post("/start",
+    body('rideId').isMongoId().withMessage("Invalid ride ID"),
+    body('otp').isString().isLength({ min: 6, max: 6 }).withMessage("OTP must be a 6-digit string"),
+    captainAuth,
+    startRide
+)
+router.post("/end",
+    body('rideId').isMongoId().withMessage("Invalid ride ID"),
+    captainAuth,
+    endRide
+)
+
 
 export default router

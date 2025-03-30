@@ -8,7 +8,7 @@ const WaitingForDriver = (params) => {
         <div className='bg-white'>
             <div className='text-3xl text-white px-6 py-4 font-bold bg-[#12b312]'>
                 <h1 className=' text-center  '>Ride Confirmed! </h1>
-                <h1 className='text-center  '>OTP - 7876</h1>
+                <h1 className='text-center  '>OTP - {params.otp}</h1>
             </div>
             <div className='flex p-6 items-center justify-between '>
                 <img className='w-22  rounded-full' src="/myImage.jpg" alt="caar" />

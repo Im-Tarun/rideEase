@@ -11,6 +11,8 @@ import CaptainHome from './pages/CaptainHome.jsx'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper.jsx'
 import CaptainLogout from './pages/CaptainLogout.jsx'
 import CapainRiding from './pages/CapainRiding.jsx'
+import UserRidding from './pages/UserRidding.jsx'
+import CurrentLocationMap from './components/CurrentLocationMap.jsx'
 
 function App() {
 
@@ -22,6 +24,7 @@ function App() {
         <Route path='/captain-login' element={<CaptainLogin />}></Route>
         <Route path='/user-register' element={<UserRegister />}></Route>
         <Route path='/user-login' element={<UserLogin />}></Route>
+
         <Route path='/home' element={
           <UserProtectedWrapper>
             <HomePage />
@@ -31,6 +34,12 @@ function App() {
           <UserProtectedWrapper>
             <Logout />
           </UserProtectedWrapper>}></Route>
+
+        <Route path='/ridding' element={
+          // <UserProtectedWrapper>
+            <UserRidding />
+          // {/* </UserProtectedWrapper> */}
+        }></Route>
 
         <Route path='/captain-home' element={
           <CaptainProtectedWrapper>
@@ -42,10 +51,14 @@ function App() {
             <CaptainLogout />
           </CaptainProtectedWrapper>}></Route>
 
-          <Route path='/captain-riding' element={
+        <Route path='/captain-ridding' element={
           <CaptainProtectedWrapper>
             <CapainRiding />
           </CaptainProtectedWrapper>}></Route>
+          
+        <Route path='/map' element={<CurrentLocationMap />}></Route>
+
+
 
       </Routes>
     </>
