@@ -10,7 +10,7 @@ const UserProtectedWrapper = ({ children }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/user/profile`, {
+      const response = await axios.get(`/api/user/profile`, {
         headers: {
           authorization: "Bearer " + token
         }

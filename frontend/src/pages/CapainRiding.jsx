@@ -5,9 +5,10 @@ import gsap from 'gsap';
 import FinishRidePannel from '../components/captainComponents/FinishRidePannel';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import CurrentLocationMap from '../components/CurrentLocationMap';
 
 const CapainRiding = () => {
-    const [finishRidePnl, setFinishRidePnl] = useState(false)
+    const [finishRidePnl, setFinishRidePnl] = useState(true)
     const finishRidePnlRef = useRef(null)
     const location = useLocation()
     const navigate = useNavigate()
@@ -27,7 +28,7 @@ const CapainRiding = () => {
     }, [finishRidePnl])
 
     const handleEndRide = async () => {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/end`, {
+        const response = await axios.post(`/api/ride/end`, {
             rideId: rideData._id
         }, {
             headers: {
@@ -44,11 +45,16 @@ const CapainRiding = () => {
     return (
         <div className='flex relative  flex-col bg-cover bg-center bg-[url(https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif)] h-screen justify-between '>
 
-            <div className='absolute flex z-10  items-center justify-between top-0 w-full'>
+            <div className='absolute flex z-1  items-center justify-between top-0 w-full'>
                 <img width={120} className='h-fit m-5 ' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="UBER" />
             </div>
 
             <div className=' w-full h-screen absolute top-0 flex flex-col justify-end overflow-hidden'>
+                <div className='z-0 h-full' >
+                    <CurrentLocationMap />
+                </div>
+
+
                 {/* captain details */}
                 <div className='bg-[#FF8900] px-4 flex flex-col items-center'>
                     <span

@@ -8,6 +8,7 @@ import captainRouter from './routes/captain.route.js'
 import mapsRouter from './routes/maps.route.js'
 import rideRoute from './routes/ride.route.js'
 import { initializeSocket } from './socket.js' 
+import path from 'path'
 
 dotenv.config()
 const app = express();
@@ -22,13 +23,17 @@ app.use("/api/captain", captainRouter)
 app.use("/api/maps", mapsRouter)
 app.use("/api/ride", rideRoute)
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+const __dirname = path.resolve()
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname, "/frontend/dist")));
+    app.get("*", (req,res)=>{
+        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+    }) 
+}
 
-const server = app.listen(port, () => {
+const server = app.listen(port ,() => {
   dbcon();
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}/`); 
 });
 
 initializeSocket(server);

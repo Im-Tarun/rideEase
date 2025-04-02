@@ -3,7 +3,7 @@ import { distanceTimeFunc } from "./maps.service.js";
 import crypto from "crypto";
 
 //function to get fare price
-export const getFare = async (pickUp, destination) => {
+export const getFare = async (pickUp, destination) => { 
   if (!pickUp || !destination) {
     throw new Error("Pickup and destination are required");
   }
@@ -18,8 +18,8 @@ export const getFare = async (pickUp, destination) => {
   };
 
   // Convert distance from meters to kilometers and time from seconds to minutes 
-  const distanceInKm = distance.value / 1000;
-  const timeInMin = duration.value / 60;
+  const distanceInKm = distance/ 1000;
+  const timeInMin = duration / 60;
 
   // Calculate fares for each vehicle type
   const fares = {
@@ -91,8 +91,7 @@ export const addCapInRide = async(rideId, capId) => {
   
   if (!ride) {
     throw new Error("Ride not found");
-  }
-  
+  } 
   return ride;
 }
 

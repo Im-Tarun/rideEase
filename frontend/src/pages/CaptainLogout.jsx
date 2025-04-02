@@ -11,7 +11,7 @@ const CaptainLogout = () => {
     const captainLogout = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/captain/logout`, {
+        const response = await axios.get(`/api/captain/logout`, {
           headers: {
             authorization: "Bearer " + token,
           },

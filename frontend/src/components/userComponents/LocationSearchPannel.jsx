@@ -11,7 +11,8 @@ const LocationSearchPannel = (params) => {
     } else if (params.activeSugg === 'destination') {
       params.setDestination(value)
     }
-  }
+  } 
+  
 
   return (
     <>
@@ -24,7 +25,8 @@ const LocationSearchPannel = (params) => {
           </button>}
         </div>
         <ul className="space-y-3 h-[83%]  overflow-y-scroll ">
-          {  params.suggestions.map((elem, indx) => {
+          
+          { params.suggestions.map((elem, indx) => {
             return (
               <li key={indx} onClick={() => {
                 handleSetInput(elem)

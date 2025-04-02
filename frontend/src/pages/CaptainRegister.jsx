@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import {CaptainDataContext} from '../contexts/CaptainContext.jsx'
 import axios from 'axios'
+import { Flip, toast, ToastContainer } from 'react-toastify'; 
 
 const CaptainRegister = () => {
   const {
@@ -12,12 +13,12 @@ const CaptainRegister = () => {
     formState: { errors, isSubmitting }
   } = useForm()
 
-  const [captainData, setCaptainData, isLoading, setIsLoading,error, setError] = useContext(CaptainDataContext); 
+  const [captainData, setCaptainData ] = useContext(CaptainDataContext); 
   const navigate = useNavigate()
 
   const registerHandler = async(registerData) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/captain/register`, registerData);
+      const response = await axios.post(`/api/captain/register`, registerData);
       const data = response.data;
       if (response.status === 200) {
         setCaptainData(data.message); // Update the context with user data 
@@ -26,6 +27,7 @@ const CaptainRegister = () => {
         navigate('/captain-home'); // Navigate to the home page
       }
     } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.")
       console.error('Registration failed:', error);
     }
     reset();
@@ -33,6 +35,19 @@ const CaptainRegister = () => {
 
   return (
     <>
+    <ToastContainer
+            position="bottom-center"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover
+            theme="light"
+            transition={Flip}
+          />
       <div className='flex flex-col items-center  w-full p-2 '>
         <form onSubmit={handleSubmit(registerHandler)} className="bg-white 2 py-5 px-4 rounded-lg flex flex-col gap-2 shadow-xl w-full max-w-lg">
         <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />

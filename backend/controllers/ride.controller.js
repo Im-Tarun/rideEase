@@ -2,10 +2,10 @@ import { validationResult } from "express-validator";
 import {addCapInRide, createRideService, getFare,getRideOtp,} from "../services/ride.service.js";
 import {coordinatesFunc,getCaptainsInRadius,} from "../services/maps.service.js";
 import {sendMessageToSocketId } from "../socket.js";
-import rideModel from "../models/ride.model.js";
+import rideModel from "../models/ride.model.js";    
 
 export const createRide = async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req); 
   if (!errors.isEmpty()) {
     return res.status(400).json({ success: false, message: errors.array() });
   }
@@ -34,7 +34,7 @@ export const createRide = async (req, res) => {
       .json({
         message: "Sent notification to all nearby captains",
         otp: ride.otp,
-        captains: captainsInRadius,
+        captains: captainsInRadius.length,
       });
   } catch (error) {
     console.log(error);
@@ -67,10 +67,9 @@ export const acceptRide = async (req, res) => {
     const newRide = await addCapInRide(rideId, req.captain._id);
     sendMessageToSocketId(
       newRide.user.socketId,
-      "ride-confirmed",
+      "ride-accepted",
       newRide.captain
-    );
-
+    ); 
     res.status(200).json({ message: "message sent to user", newRide });
   } catch (error) {
     console.log(error);

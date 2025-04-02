@@ -41,8 +41,7 @@ export const initializeSocket = (server) => {
             ltd: latitude,
             lng:longitude
           }
-        });
-        console.log(`Updated location for captain - ${capId}:`,{ latitude, longitude});
+        }); 
       } catch (error) {
         console.error("Error updating captain location:", error);
         socket.emit("error", { message: "Failed to update captain location." });

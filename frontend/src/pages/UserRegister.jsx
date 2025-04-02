@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
-import { data, Link , useNavigate} from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { UserDataContext } from '../contexts/UserContext';
+import { ToastContainer, toast, Flip } from 'react-toastify';
 
 const UserRegister = () => {
   const {
@@ -17,17 +18,19 @@ const UserRegister = () => {
   
   const registerHandler = async(registerData) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/register`, registerData);
+      const response = await axios.post(`/api/user/register`, registerData);
       const data = response.data;
-      if (response.status === 200) {
-        console.log(data);
+      if (response.status === 200) { 
         setUserData(data); // Update the context with user data
         localStorage.removeItem('token'); 
         localStorage.setItem('token', data.token)
+        toast.success(response.message)
         navigate('/home'); // Navigate to the home page
       }
     } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.")
       console.error('Registration failed:', error);
+
     }
     reset();
   }
@@ -35,6 +38,19 @@ const UserRegister = () => {
 
   return (
     <>
+    <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover
+        theme="light"
+        transition={Flip}
+      />
       <div className='flex  flex-col items-center h-screen pt-2 w-full px-2 overflow-y-hidden ' >
         <form onSubmit={handleSubmit(registerHandler)} className="bg-white py-5 mt-3  px-4 rounded-lg flex flex-col gap-4 shadow-xl w-full max-w-lg">
           <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
@@ -60,7 +76,7 @@ const UserRegister = () => {
               className="my-1 p-2 placeholder:text-sm border-2 border-[#dcdcdc] focus:border-amber-400 focus:outline-none text-lg bg-[#dcdcdc] rounded mb-2"
 
               {...register("fullName.lastName", {
-                required: false,
+
               })}
             />
             {errors.fullName?.firstName && <p className="text-red-500 text-sm mt-1 absolute -bottom-3 right-1">{errors.fullName.firstName.message}</p>}
@@ -124,6 +140,7 @@ const UserRegister = () => {
           affiliates to the number provided.</p>
 
       </div>
+      
     </>
   )
 }

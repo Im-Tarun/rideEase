@@ -3,13 +3,13 @@
 ## POST /api/user/register
 
 ### Description
-This endpoint registers a new user. It validates the provided email, ensures the first name is at least 3 characters long, and the password is at least 6 characters long. On success, it returns the registered user data and a JWT token. 
+This endpoint registers a new user. It validates the provided email, ensures the first name is at least 3 characters long, and the password is at least 6 characters long. On success, it returns the registered user data and a JWT token.
 
 ### Request Body
 - **fullName** (object):
   - **firstName** (string, required): Minimum 3 characters.
-  - **lastName** (string, required)
-- **emailId** (string, required): Must be a valid email.
+  - **lastName** (string, optional)
+- **email** (string, required): Must be a valid email.
 - **password** (string, required): Minimum 6 characters.
 
 Example:
@@ -19,7 +19,7 @@ Example:
     "firstName": "John",
     "lastName": "Doe"
   },
-  "emailId": "john.doe@example.com",
+  "email": "john.doe@example.com",
   "password": "secret123"
 }
 ```
@@ -90,7 +90,7 @@ Example:
 ```json
 {
   "lat": 40.712776,
-  "lng": -74.005974
+  "lng": 74.005974
 }
 ```
 
@@ -333,3 +333,125 @@ Example:
   "message": "Ride has completed successfully"
 }
 ```
+
+---
+
+## Socket Events Documentation
+
+### Overview
+The backend uses Socket.IO to enable real-time communication between the server and clients. Below are the supported socket events.
+
+### Client Events
+
+#### `join`
+**Description**: Associates a user or captain with their socket ID.
+
+**Payload**:
+```json
+{
+  "userType": "user" | "captain",
+  "userId": "64f1c2e5b5d6c2a1f8e4d123"
+}
+```
+
+**Response**: None.
+
+---
+
+#### `updateCapLoc`
+**Description**: Updates the captain's location in the database.
+
+**Payload**:
+```json
+{
+  "capId": "64f1c2e5b5d6c2a1f8e4d456",
+  "latitude": 40.712776,
+  "longitude": -74.005974
+}
+```
+
+**Response**:
+- **Error**: If the payload is invalid:
+  ```json
+  {
+    "message": "Invalid data: capId and location are required."
+  }
+  ```
+
+---
+
+### Server Events
+
+#### `new-ride`
+**Description**: Notifies captains in the vicinity of a new ride request.
+
+**Payload**:
+```json
+{
+  "rideId": "64f1c2e5b5d6c2a1f8e4d456",
+  "user": {
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com"
+  },
+  "pickUp": "New York",
+  "destination": "Los Angeles",
+  "fare": "4050.00"
+}
+```
+
+---
+
+#### `ride-accepted`
+**Description**: Notifies the user that a captain has accepted their ride.
+
+**Payload**:
+```json
+{
+  "captain": {
+    "fullName": {
+      "firstName": "Jane",
+      "lastName": "Smith"
+    },
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+---
+
+#### `ride-started`
+**Description**: Notifies the user that the ride has started.
+
+**Payload**:
+```json
+{
+  "rideId": "64f1c2e5b5d6c2a1f8e4d456",
+  "status": "ongoing"
+}
+```
+
+---
+
+#### `ride-completed`
+**Description**: Notifies the user that the ride has been completed.
+
+**Payload**:
+```json
+{
+  "rideId": "64f1c2e5b5d6c2a1f8e4d456",
+  "status": "completed"
+}
+```
+
+---
+
+### Notes
+- Ensure the client listens for the appropriate events to handle real-time updates effectively.
+- The `join` event must be emitted immediately after establishing a socket connection to associate the user or captain with their socket ID.

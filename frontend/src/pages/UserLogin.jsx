@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserDataContext } from '../contexts/UserContext.jsx'; 
+import { UserDataContext } from '../contexts/UserContext.jsx';
 import axios from 'axios';
+import { Flip, toast, ToastContainer } from 'react-toastify'; 
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -10,15 +11,15 @@ const UserLogin = () => {
   const navigate = useNavigate()
   const [userData, setUserData] = useContext(UserDataContext);
 
-  const handleLogin = async(e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const loginData = {
-      email : email,
-      password : password,
+      email: email,
+      password: password,
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, loginData);
+      const response = await axios.post(`/api/user/login`, loginData);
       const data = response.data;
       if (response.status === 200) {
         setUserData(data); // Update the context with user data 
@@ -27,17 +28,18 @@ const UserLogin = () => {
         navigate('/home'); // Navigate to the home page
       }
     } catch (error) {
-      console.error('Registration failed:', error);
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.")
+      console.error('Registration failed:', error.response);
     }
     setEmail('')
     setPassword('')
   }
-  
+
 
   return (
     <div className="flex justify-center flex-col items-center h-screen w-full px-5">
       <form onSubmit={handleLogin} className="bg-white p-6 rounded-lg flex flex-col gap-5 shadow-xl w-full max-w-lg">
-      <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
+        <img width={200} className='h-fit my-3 text-4xl font-extrabold' src="/logo.png" alt="RideEase" />
 
         <div>
           <label htmlFor='email' className="block text-xl font-semibold">What's Your Email</label>
@@ -69,13 +71,13 @@ const UserLogin = () => {
 
         <div>
           <button
-          type='submit'
+            type='submit'
             className="w-full bg-black text-2xl font-bold text-white p-2 rounded hover:bg-blue-600 mb-2"
           >
             Login
           </button>
 
-          <div className='bg-white'> 
+          <div className='bg-white'>
             <span>New here ? </span>
             <Link
               to="/user-register"
@@ -87,7 +89,21 @@ const UserLogin = () => {
         </div>
       </form>
       <Link to={"/captain-login"} className='max-w-lg w-full mt-10 block text-center text-2xl font-bold bg-[#12b312] text-white p-2 rounded hover:bg-gray-600'> Sign In as Captain</Link>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover
+        theme="light"
+        transition={Flip}
+      />
     </div>
+
   )
 }
 

@@ -10,13 +10,13 @@ const CaptainDetails = (params) => {
                 <div className='flex gap-2 items-center'>
                     <img className=' rounded-full h-18 w-18 object-cover object-center ' src="/myImage.jpg" alt="sdfs" />
                     <div>
-                        <h2 className='text-xl font-semibold capitalize'> {params.captainData.fullName.firstName+"" +params.captainData.fullName.lastName}</h2>
+                        <h2 className='text-xl font-semibold capitalize'> {params.captainData.fullName.firstName+" " +params.captainData.fullName.lastName}</h2>
                         <p className='text-gray-600 text-md'>Basic</p>
                     </div>
                 </div>
                 <div className='px-2 items-end flex flex-col'>
                     <h2 className='text-xl font-semibold'>Rs. 223</h2>
-                    <p className='text-gray-600 text-md'>Total Earned</p>
+                    <p className='text-gray-600 text-md text-right'>Total Earned</p>
                 </div>
             </div>
 

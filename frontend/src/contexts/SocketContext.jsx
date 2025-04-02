@@ -7,7 +7,7 @@ export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     
 	useEffect(() => {
-        const newSocket = io('http://localhost:5000'); 
+        const newSocket = io('/'); 
         newSocket.on('connect', ()=>{
             console.log("connected to the server")
         })
@@ -15,7 +15,6 @@ export const SocketProvider = ({ children }) => {
 		return () => newSocket.close();
 	}, []);
  
-  
 
 	return (
 		<SocketContext.Provider value={{ socket }}>

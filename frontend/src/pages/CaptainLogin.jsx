@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { CaptainDataContext } from '../contexts/CaptainContext';
+import { Flip, toast, ToastContainer } from 'react-toastify';
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ const CaptainLogin = () => {
       password : password,
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/captain/login`, loginData);
+      const response = await axios.post(`/api/captain/login`, loginData);
       const data = response.data;
       if (response.status === 200) {
         setCaptainData(data); // Update the context with user data
@@ -26,6 +27,7 @@ const CaptainLogin = () => {
         navigate('/captain-home'); // Navigate to the home page
       }
     } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.")
       console.error('Registration failed:', error);
     }
     setEmail('')
@@ -86,6 +88,19 @@ const CaptainLogin = () => {
         </div>
       </form>
       <Link to={"/user-login"} className='max-w-lg w-full mt-10 block text-center text-2xl font-bold bg-[#b33d12] text-white p-2 rounded hover:bg-gray-600'> Sign In as User</Link>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover
+        theme="light"
+        transition={Flip}
+      />
     </div>
   )
 }

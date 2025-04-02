@@ -5,15 +5,15 @@ import blTokenModel from "../models/blackListToken.model.js";
 export const captainRegister = async (req, res) => {
     const {fullName, email, password, status, vehicle} = req.body
     if(!email || !password || !fullName.firstName || !vehicle.color || !vehicle.vehicleType || !vehicle.plate || !vehicle.capacity ){
-        return res.status(400).json({mesaage: "please enter all the details "})  
+        return res.status(400).json({message: "please enter all the details "})  
     }
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ success: false, mesaage: errors.array() });
+        return res.status(400).json({ success: false, message:errors.array() });
     }
 
-    const isCaptainAlreadyExist = await captainModel.findOne({email})
+    const isCaptainAlreadyExist = await captainModel.findOne({email: email.trim().toLowerCase()})
     if(isCaptainAlreadyExist){
       return res.status(400).json({message: "Email already registered"})  
     }
@@ -22,10 +22,10 @@ export const captainRegister = async (req, res) => {
         const hashedPassword = await captainModel.hashPassword(password);
         const newCaptain = new captainModel({
             fullName:{
-                firstName : fullName.firstName,
-                lastName : fullName.lastName,
+                firstName : fullName.firstName.trim().toLowerCase(),
+                lastName : fullName.lastName.trim().toLowerCase(),
             },
-            email,
+            email: email.trim().toLowerCase(),
             password: hashedPassword,
             status,
             vehicle:{
@@ -43,7 +43,7 @@ export const captainRegister = async (req, res) => {
         
     } catch (error) {
         console.log(error);
-        return res.status(500).json({mesaage: "sever error"}) 
+        return res.status(500).json({message: "sever error"}) 
     }
 
 }
@@ -53,26 +53,26 @@ export const captainLogin = async (req, res) => {
     const errors = validationResult(req);
   
     if(!errors.isEmpty()){
-      return res.status(400).json({ success: false, mesaage: errors.array() });
+      return res.status(400).json({ success: false, message: errors.array() });
     }
   
     try {
-      const captain = await captainModel.findOne({email}).select('+password')
+      const captain = await captainModel.findOne({email:email.trim().toLowerCase()}).select('+password')
       if(!captain){
-        return res.status(401).json({ success: false, mesaage: "Email is not registered. Register first" });
+        return res.status(401).json({ success: false, message: "Email is not registered." });
       }
       const isMatch = await captain.comparePassword(password);
   
       if(!isMatch){
-        return res.status(401).json({ success: false, mesaage: "password does not match" });
+        return res.status(401).json({ success: false, message: "password does not match" });
       }
       const token = captain.generateAuthToken();
       res.cookie("token", token);
       
-      return res.status(200).json({ success: true, mesaage: captain, token });
+      return res.status(200).json({ success: true, message: captain, token });
     } catch (error) {
         console.log(error)
-        return res.status(500).json({mesaage: "sever error"}) 
+        return res.status(500).json({message: "sever error"})  
     }
   
 }
@@ -96,5 +96,5 @@ export const logOut = async (req, res) => {
     res.status(500).json({ message: "Server error during logout" });
   }
 
-  res.status(200).json({mesaage : "logged out successfully"})
+  res.status(200).json({message : "logged out successfully"})
 }

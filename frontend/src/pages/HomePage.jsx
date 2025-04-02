@@ -12,6 +12,7 @@ import { SocketContext } from '../contexts/SocketContext.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import CurrentLocationMap from '../components/CurrentLocationMap.jsx';
 import { IoIosLogOut } from 'react-icons/io';
+import { Flip, toast, ToastContainer } from 'react-toastify';
 
 
 const HomePage = () => {
@@ -32,7 +33,6 @@ const HomePage = () => {
   const [pickUpSugg, setPickUpSugg] = useState([])
   const [destionationSugg, setDestinationSugg] = useState([])
   const [activeSugg, setActiveSugg] = useState('')
-  const [pickUpCaptain, setPickUpCaptain] = useState(null)
 
 
   //pannel opening
@@ -112,7 +112,7 @@ const HomePage = () => {
   const handlePickUpChange = async (e) => {
     setPickUp(e.target.value)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/maps/get-suggestions/o`,
+      const response = await axios.get(`/api/maps/get-suggestions`,
         {
           params: { input: e.target.value },
           headers: {
@@ -120,15 +120,16 @@ const HomePage = () => {
           }
         }
       )
-      setPickUpSugg(response.data.map(elem => elem.description))
+      setPickUpSugg(response.data)
     } catch (error) {
+      toast.error(error.response?.data?.message)
       console.log(error)
     }
   }
   const handleDestinationChange = async (e) => {
     setDestination(e.target.value)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/maps/get-suggestions/o`,
+      const response = await axios.get(`/api/maps/get-suggestions`,
         {
           params: { input: e.target.value },
           headers: {
@@ -136,37 +137,42 @@ const HomePage = () => {
           }
         }
       )
-      setDestinationSugg(response.data.map(elem => elem.description))
+      setDestinationSugg(response.data)
     } catch (error) {
+      toast.error(error.response?.data?.message)
       console.log(error)
     }
   }
   const handleFindFare = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/ride/get-fare`,
-        {
-          params: {
-            pickUp,
-            destination
-          },
-          headers: {
-            authorization: "Bearer " + localStorage.getItem('token')
-          }
+    toast.promise(
+      axios.get(`/api/ride/get-fare`, {
+        params: {
+          pickUp,
+          destination
+        },
+        headers: {
+          authorization: "Bearer " + localStorage.getItem('token')
         }
-      )
-      setFare(response.data)
-      setShowVehiclePnl(true)
-      setShowLocPannel(false)
-      // console.log(response.data.cost.car)
-    } catch (error) {
-      console.log(error)
-    }
+      }).then(response => {
+        setFare(response.data);
+        setShowVehiclePnl(true);
+        setShowLocPannel(false);
+      }),
+      {
+        pending: 'Fetching fare details...',
+        success: 'Fare details fetched successfully!',
+        error: 'Failed to fetch fare details!'
+      }
+    ).catch(error => {
+      toast.error(error.response?.data?.message || "Failed to fetch fare details. Please try again.")
+      console.log(error);
+    });
   }
   const handleCreateRide = async (vehicleType) => {
     setVehicle(vehicleType)
     setShowFDrPnl(true)
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/ride/create`,
+      const response = await axios.post(`/api/ride/create`,
         { // Request body
           pickUp,
           destination,
@@ -179,8 +185,11 @@ const HomePage = () => {
           },
         }
       )
-      setOtp(response.data.otp)
+      setOtp(response.data.otp)  
+      toast.success("Ride Created successfully! "+ response.data?.captains +" Captains Found Near You")
+      
     } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to create ride. Please try again.");
       console.log(error)
     }
   }
@@ -188,15 +197,19 @@ const HomePage = () => {
   //contecting to socket 
   const [userData] = useContext(UserDataContext)
   const { socket } = useContext(SocketContext)
+  const [isCaptainFound , setIsCaptainFound ] = useState(false)
+  const [pickUpCaptain, setPickUpCaptain] = useState(null)
   const navigate = useNavigate()
+
 
   useEffect(() => {
     socket.emit("join", { userType: 'user', userId: userData._id })
 
-    socket.on("ride-confirmed", (data) => {
+    socket.on("ride-accepted", (data) => {
       setShowFDrPnl(false)
       setPickUpCaptain(data)
       setshowWaitDvPnl(true)
+      setIsCaptainFound(true)
     })
     socket.on("ride-started", (data) => {
       setshowWaitDvPnl(false)
@@ -210,6 +223,19 @@ const HomePage = () => {
 
   return (
     <>
+    <ToastContainer
+            position="bottom-center"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover
+            theme="dark"
+            transition={Flip}
+          />
       <div className='flex overflow-hidden relative flex-col bg-cover bg-center bg-[url(https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif)] h-screen justify-between '>
         <div className='absolute flex z-1  items-center justify-between top-0 w-full'>
         <img width={200}  className='h-fit my-3 text-4xl font-extrabold' src="/logo.png"  alt="RideEase" />
@@ -220,7 +246,7 @@ const HomePage = () => {
         <div className='absolute w-full h-screen flex flex-col justify-end '>
           {/* map compnent */}
           <div ref={mapPannelRef} className='z-0 h-[75%]' >
-            <CurrentLocationMap />
+            <CurrentLocationMap isCaptainFound={isCaptainFound} pickUpCaptain={pickUpCaptain} />
           </div>
           
           {/* form box */}
