@@ -57,12 +57,13 @@ rideEase/
 
 4. **Running the Application**
    - **Development Mode:**
-     - Run the backend using:
+      - Run the backend using:
        ```
        npm run dev
        ```
       - Run the frontend using:
        ```
+       cd frontend
        npm run dev
        ```
    - **Production Mode:**
