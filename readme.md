@@ -60,9 +60,9 @@ rideEase/
 4. **Running the Application**
    - **Development Mode:**
       - Run the backend using:
-       ```
-       npm run dev
-       ```
+      ```
+      npm run dev
+      ```
       - Run the frontend using:
        ```
        cd frontend
@@ -70,13 +70,13 @@ rideEase/
        ```
    - **Production Mode:**
      - Build the frontend and install node modules:
-       ```
-       npm run build
-       ```
+     ```
+     npm run build
+     ```
      - Start the server with:
-       ```
-       npm run start
-       ```
+     ```
+     npm run start
+     ```
 
 ## API Documentation
 
