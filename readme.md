@@ -41,10 +41,9 @@ rideEase/
 1. **Clone the Repository**
    - Clone the project into your local machine.
 
-2. **Install Dependencies**
+2. **Install Dependencies **
    - For the backend, run:
      ```
-     cd backend
      npm install
      ```
    - For the frontend, run:
@@ -62,7 +61,10 @@ rideEase/
        ```
        npm run dev
        ```
-     - Run the frontend (if needed) via the provided Vite config.
+      - Run the frontend using:
+       ```
+       npm run dev
+       ```
    - **Production Mode:**
      - Build the frontend:
        ```
@@ -70,7 +72,7 @@ rideEase/
        ```
      - Start the server with:
        ```
-       npm start
+       npm run start
        ```
 
 ## API Documentation
