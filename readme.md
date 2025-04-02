@@ -41,16 +41,18 @@ rideEase/
 1. **Clone the Repository**
    - Clone the project into your local machine.
 
-2. **Install Dependencies **
-   - For the backend, run:
-     ```
-     npm install
-     ```
-   - For the frontend, run:
-     ```
-     cd frontend
-     npm install
-     ```
+2. **Install Dependencies (For Development Only)**
+   - For development environment:
+     - For the backend, run:
+       ```
+       npm install
+       ```
+     - For the frontend, run:
+       ```
+       cd frontend
+       npm install
+       ```
+   - For production, the dependencies are assumed to be bundled, so npm install is not required.
 
 3. **Environment Setup**
    - Create a `.env` file in the `backend` folder with the required environment variables (PORT, MONGODB connection URI, JWT secret, and optionally GOOGLE_MAPS_API_KEY).
@@ -67,7 +69,7 @@ rideEase/
        npm run dev
        ```
    - **Production Mode:**
-     - Build the frontend:
+     - Build the frontend and install node modules:
        ```
        npm run build
        ```
@@ -78,7 +80,7 @@ rideEase/
 
 ## API Documentation
 
-Refer to the individual API documentation in the backend `readme.md` for endpoints under:
+Refer to the individual API documentation in the backend `backend/readme.md` for endpoints under:
 - `/api/user`
 - `/api/captain`
 - `/api/ride`
