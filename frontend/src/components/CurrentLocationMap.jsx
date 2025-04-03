@@ -82,7 +82,9 @@ const CurrentLocationMap = ({ newRide }) => {
       {/* Marker for PickUp Location */}
       {pickUpPosition && (
         <Marker position={pickUpPosition}>
-          <Popup>PickUp Location: {pickUp}</Popup>
+          {newRide ? <Popup>PickUp Location: {newRide.pickUp}</Popup>:
+          <Popup>Your location</Popup>}
+          
         </Marker>
       )}
     </MapContainer>

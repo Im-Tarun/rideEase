@@ -187,7 +187,7 @@ const CaptainHome = () => {
 
         {/* show new ride  */}
         <div ref={newRidePnlRef} className='w-full flex flex-col justify-end z-40 translate-y-full absolute '>
-          <NewRidePannel acceptRide={acceptRide} newRide={newRide} setShowNewRidePnl={setShowNewRidePnl} setShowPickUpPnl={setShowPickUpPnl} />
+          <NewRidePannel setNewRide={setNewRide} acceptRide={acceptRide} newRide={newRide} setShowNewRidePnl={setShowNewRidePnl} setShowPickUpPnl={setShowPickUpPnl} />
         </div>
 
         {/* pikup ride */}

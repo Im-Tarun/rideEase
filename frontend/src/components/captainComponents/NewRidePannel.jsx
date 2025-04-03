@@ -54,7 +54,9 @@ const NewRidePannel = (params) => {
                 }} className='py-2 px-4 rounded-lg grow text-2xl bg-[#ffcf10] font-bold  '>
                     Accept
                 </button>
-                <button onClick={() => params.setShowNewRidePnl(false)} className='py-2 px-4  rounded-lg text-2xl  bg-[#242A37] font-bold text-white  border-2 '>
+                <button onClick={() => {params.setShowNewRidePnl(false)
+                    setNewRide(null)
+                }} className='py-2 px-4  rounded-lg text-2xl  bg-[#242A37] font-bold text-white  border-2 '>
                     Ignore
                 </button>
             </div>
