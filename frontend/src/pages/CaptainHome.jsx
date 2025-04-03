@@ -81,8 +81,7 @@ const CaptainHome = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          socket.emit("updateCapLoc", { capId: captainData._id, latitude, longitude });
-          console.log("Location Updated on db:", latitude, longitude);
+          socket.emit("updateCapLoc", { capId: captainData._id, latitude, longitude }); 
         },
         (error) => {
           console.error("Error fetching location:", error);

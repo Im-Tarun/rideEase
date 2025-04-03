@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RiArrowUpWideLine } from "react-icons/ri";
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -9,11 +9,17 @@ import CurrentLocationMap from '../components/CurrentLocationMap';
 
 const CapainRiding = () => {
     const [finishRidePnl, setFinishRidePnl] = useState(true)
+    const [rideData , setRideData ] = useState(null)
     const finishRidePnlRef = useRef(null)
     const location = useLocation()
     const navigate = useNavigate()
+    
 
-    const rideData = location.state?.rideData
+    useEffect(() => {
+        if (location.state?.rideData) {
+            setRideData(location.state.rideData);
+        }
+    }, [location.state]);
 
     useGSAP(() => {
         if (finishRidePnl) {
@@ -38,6 +44,7 @@ const CapainRiding = () => {
         )
         console.log(response.data)
         setFinishRidePnl(false)
+        setRideData(null)
         navigate('/captain-home')
     }
 
@@ -51,7 +58,7 @@ const CapainRiding = () => {
 
             <div className=' w-full h-screen absolute top-0 flex flex-col justify-end overflow-hidden'>
                 <div className='z-0 h-full' >
-                    <CurrentLocationMap />
+                    <CurrentLocationMap rideData={rideData} />
                 </div>
 
 

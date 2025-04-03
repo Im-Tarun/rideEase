@@ -19,16 +19,16 @@ const ChangeView = ({ center }) => {
   return null;
 };
 
-const CurrentLocationMap = ({ newRide }) => {
+const CurrentLocationMap = (params) => {
   const [position, setPosition] = useState([0, 0]); // Default to [0, 0] to avoid errors
   const [pickUpPosition, setPickUpPosition] = useState(null); // Separate state for pickUp location
 
   useEffect(() => {
     // Function to fetch coordinates for the pickUp location
-    const getCoordinates = async () => {
+    const getCoordinates = async (loc) => {
       try {
         const response = await axios.get(`/api/maps/get-coordinates`, {
-          params: { address: newRide?.pickUp },
+          params: { address: loc },
           headers: {
             authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -48,8 +48,7 @@ const CurrentLocationMap = ({ newRide }) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setPosition([latitude, longitude]); // Update current position
-          console.log("location updated on map:", latitude, longitude);
+          setPosition([latitude, longitude]); // Update current position 
         },
         (error) => {
           console.error("Error fetching current location:", error);
@@ -58,15 +57,19 @@ const CurrentLocationMap = ({ newRide }) => {
     };
 
     // If pickUp is provided, fetch its coordinates
-    if (newRide) {
-      getCoordinates();
-    } else {
+    if (params.newRide ) {
+      getCoordinates(params.newRide.pickUp);
+    }else if(params.rideData ){
+      getCoordinates(params.rideData.destination);
+
+    }
+     else {
       // Otherwise, update the user's current location
       updateLocation();
       const intervalId = setInterval(updateLocation, 10000); // Update every 10 seconds
       return () => clearInterval(intervalId); // Cleanup interval on unmount
     }
-  }, [newRide]); // Re-run effect when pickUp changes
+  }, [params.newRide]); // Re-run effect when pickUp changes
 
   return (
     <MapContainer center={position} zoom={16} zoomControl={false} className="h-full w-full">
@@ -82,9 +85,13 @@ const CurrentLocationMap = ({ newRide }) => {
       {/* Marker for PickUp Location */}
       {pickUpPosition && (
         <Marker position={pickUpPosition}>
-          {newRide ? <Popup>PickUp Location: {newRide.pickUp}</Popup>:
-          <Popup>Your location</Popup>}
-          
+          {params.newRide ? (
+            <Popup>PickUp Location: {params.newRide.pickUp}</Popup>
+          ) : params.rideData ? (
+            <Popup>Destination: {params.rideData.destination}</Popup>
+          ) : (
+            <Popup>Your location</Popup>
+          )}
         </Marker>
       )}
     </MapContainer>
